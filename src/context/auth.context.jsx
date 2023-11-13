@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, createContext } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
-
-import { API_URL } from "../utils/consts";
 
 const AuthContext = createContext();
 
@@ -10,6 +9,7 @@ function AuthProviderWrapper(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -21,28 +21,35 @@ function AuthProviderWrapper(props) {
     setToken(token);
   };
 
+  const removeToken = () => {
+    localStorage.removeItem("authToken", token);
+  };
+
+  const logOutUser = () => {
+    removeToken();
+    setIsLoggedIn(false);
+    setUser(null);
+    navigate("/");
+  };
+
   const authenticateUser = useCallback(() => {
-    // If the token exists in the localStorage
     if (token) {
       axios
-        .get(`${API_URL}/api/auth/verify`, {
+        .get(`${process.env.REACT_APP_API_URL}/api/auth/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          // If the server verifies that JWT token is valid
           const user = response.data;
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
         })
         .catch((error) => {
-          // If the server sends an error response (invalid token)
           setIsLoggedIn(false);
           setIsLoading(false);
           setUser(null);
         });
     } else {
-      // If the token is not available (or is removed)
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
@@ -62,6 +69,7 @@ function AuthProviderWrapper(props) {
         token,
         storeToken,
         authenticateUser,
+        logOutUser,
       }}
     >
       {props.children}

@@ -5,14 +5,12 @@ import { Link } from "react-router-dom";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-const API_URL = "http://localhost:3000";
-
 function SearchResults() {
   const [imagesList, setImagesList] = useState([]);
 
   const getAllImages = () => {
     axios
-      .get(`https://lets-shoot.herokuapp.com/api/images`)
+      .get(`${process.env.REACT_APP_API_URL}/api/images`)
       .then((response) => setImagesList(response.data))
       .catch((error) => console.log(error));
   };

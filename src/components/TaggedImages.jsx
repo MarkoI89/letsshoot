@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback} from "react";
-import axiosInstance from "../utils/axiosInstance";
+import React from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../context/auth.context";
 import PhotoModal from "./PhotoModal";
 
-const UserPictures = ({ id }) => {
+export default function TaggedImages({username}) {
+  const { token } = useContext(AuthContext);
 
-  const [pictures, setPictures] = useState([]);
+  const [images, setImages] = useState([]);
   const [photoModal, setPhotoModal] = useState(null);
-  const [photoId, setPhotoId] = useState("");
   const [photo, setPhoto] = useState("");
   const [description, setDescription] = useState("");
   const [photographer, setPhotographer] = useState("");
@@ -16,13 +18,12 @@ const UserPictures = ({ id }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [userId, setUserId] = useState(null)
   const [userName, setUserName] = useState("")
+
 
   const clickImage = (picture, index) => {
     setPhotoModal(true);
     setPhoto(picture.link);
-    setPhotoId(picture._id);
     setDescription(picture.description);
     setPhotographer(picture.photographer);
     setModel(picture.model);
@@ -31,42 +32,43 @@ const UserPictures = ({ id }) => {
     setFirstName(picture.user.firstName);
     setLastName(picture.user.lastName);
     setAvatar(picture.user.avatar);
-    setUserId(picture.user._id)
     setUserName(picture.user.username)
+
   };
 
-  const getLatestPictures = useCallback(() => {
-    axiosInstance
-      .get(`${process.env.REACT_APP_API_URL}/api/images/user/${id}`)
-      .then((response) => {
-        setPictures(response.data);
+  console.log(userName)
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/images/user/${username}/tags`, {
+        headers: { Authorization: "Bearer " + token },
       })
-      .catch((error) => {
-        console.log("No images found");
+      .then((res) => {
+        setImages(res.data);
       });
-  }, [id]);
-
-  useEffect(getLatestPictures, [getLatestPictures]);
-
-  console.log(pictures);
+  }, [username, token]);
 
   return (
     <>
       <section className="usersPictures">
-        {pictures.map((picture, index) => (
+        {images.map((picture, index) => (
           <div className="photoContainer" key={picture.link}>
             <img
               src={picture.link}
               alt={"users pic"}
               loading="lazy"
+              on
               onClick={() => clickImage(picture, index)}
             />
+            {/* <DeleteImage
+              imageId={picture._id}
+              getLatestPictures={getLatestPictures}
+            /> */}
           </div>
         ))}
         {photoModal && (
           <PhotoModal
             photo={photo}
-            photoId={photoId}
             description={description}
             photographer={photographer}
             model={model}
@@ -76,14 +78,10 @@ const UserPictures = ({ id }) => {
             firstName={firstName}
             lastName={lastName}
             avatar={avatar}
-            userId={userId}
             userName={userName}
-            getLatestPictures={getLatestPictures}
           />
         )}
       </section>
     </>
   );
-};
-
-export default UserPictures;
+}

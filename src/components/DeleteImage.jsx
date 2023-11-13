@@ -1,15 +1,14 @@
 import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
-import { API_URL } from "../utils/consts";
 
-const DeleteImage = ({ imageId, getLatestPictures }) => {
+const DeleteImage = ({ imageId, getLatestPictures, setDeleteModal, setPhotoModal }) => {
   const { token } = useContext(AuthContext);
 
   const handleClick = (event) => {
     event.preventDefault();
     const config = {
-      baseURL: API_URL,
+      baseURL: process.env.REACT_APP_API_URL,
       url: `/api/images/${imageId}`,
       method: "DELETE",
       headers: { Authorization: "Bearer " + token },
@@ -17,6 +16,8 @@ const DeleteImage = ({ imageId, getLatestPictures }) => {
     axios(config)
       .then((res) => {
         console.log(res.data);
+        setDeleteModal(false)
+        setPhotoModal(false)
         getLatestPictures();
       })
       .catch((e) => {
@@ -24,7 +25,7 @@ const DeleteImage = ({ imageId, getLatestPictures }) => {
       });
   };
 
-  return <button onClick={handleClick}>Delete picture</button>;
+  return <button className="deleteImageButton" onClick={handleClick}>Yes</button>;
 };
 
 export default DeleteImage;

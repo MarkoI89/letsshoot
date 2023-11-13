@@ -1,31 +1,47 @@
 import React, { useState, useEffect } from "react";
-import "../../App.js";
-import { Link } from "react-router-dom";
+import "../App.js";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useContext } from "react";
-import { AuthContext } from "../../context/auth.context";
+import { AuthContext } from "../context/auth.context.jsx";
 import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import ColorLensIcon from "@mui/icons-material/ColorLens";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import WorkIcon from "@mui/icons-material/Work";
-import "./Searchbar.css";
-// import BookData from '../Data.json'
 
-const API_URL = "https://lets-shoot.herokuapp.com";
-
-function Searchbar({ placeHolderSearch }) {
+export default function TagColaborator({
+  setPhotographerColab,
+  setPhotographerInput,
+  setModelColab,
+  setModelInput,
+  setMakeupColab,
+  setMakeupInput,
+  placeHolderSearch,
+}) {
   const [filterData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
   const { isLoggedIn, token } = useContext(AuthContext);
 
+  const handlePhotographer = (userItem) => {
+    if (userItem.role.includes("photographer")) {
+      setPhotographerColab(userItem.username);
+      clearInput();
+      setPhotographerInput(false);
+    } else if (userItem.role.includes("model")) {
+      setModelColab(userItem.username);
+      clearInput();
+      setModelInput(false);
+    } else if (userItem.role.includes("makeup artist")) {
+      setMakeupColab(userItem.username);
+      clearInput();
+      setMakeupInput(false);
+    }
+  };
+
   useEffect(() => {
     if (!wordEntered) return;
     axios
-      .get(`${API_URL}/api/user?username=${wordEntered}`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/user?username=${wordEntered}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -51,12 +67,11 @@ function Searchbar({ placeHolderSearch }) {
           <div className="searchInput">
             <input
               type="text"
-              placeholder={placeHolderSearch}
               value={wordEntered}
               onChange={handleFilter}
+              placeholder={placeHolderSearch}
             />
             <div className="searchIcon">
-              {/* SearchIcon onClick function to define */}
               {filterData.length === 0 ? (
                 <SearchIcon />
               ) : (
@@ -68,14 +83,8 @@ function Searchbar({ placeHolderSearch }) {
             <div className="dataResult">
               {filterData.slice(0, 4).map((userItem) => {
                 return (
-                  //                {/* value.title = the value parameter and the value wanted */}
-
-                  <Link
-                    key={userItem._id}
-                    className="dataItem"
-                    to={"/user/" + userItem.username.toLowerCase()}
-                  >
-                    <p>
+                  <div key={userItem._id} className="dataItem">
+                    <p onClick={() => handlePhotographer(userItem)}>
                       {userItem.username}{" "}
                       {userItem.role.includes("photographer") && (
                         <CameraEnhanceIcon />
@@ -84,15 +93,8 @@ function Searchbar({ placeHolderSearch }) {
                       {userItem.role.includes("makeup artist") && (
                         <AutoFixHighIcon />
                       )}
-                      {userItem.role.includes("hair designer") && (
-                        <ColorLensIcon />
-                      )}
-                      {userItem.role.includes("producer") && (
-                        <AttachMoneyIcon />
-                      )}
-                      {userItem.role.includes("props master") && <WorkIcon />}
                     </p>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
@@ -103,5 +105,3 @@ function Searchbar({ placeHolderSearch }) {
     </div>
   );
 }
-
-export default Searchbar;

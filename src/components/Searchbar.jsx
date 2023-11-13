@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
-import "../App.css";
+import "../App.js";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useContext } from "react";
-import { AuthContext } from "../context/auth.context";
+import { AuthContext } from "../context/auth.context.jsx";
 import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import WorkIcon from "@mui/icons-material/Work";
-// import BookData from '../Data.json'
-
-const API_URL = "https://lets-shoot.herokuapp.com";
 
 function Searchbar({ placeHolderSearch }) {
   const [filterData, setFilteredData] = useState([]);
@@ -24,7 +21,7 @@ function Searchbar({ placeHolderSearch }) {
   useEffect(() => {
     if (!wordEntered) return;
     axios
-      .get(`${API_URL}/api/user?username=${wordEntered}`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/user?username=${wordEntered}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -74,23 +71,23 @@ function Searchbar({ placeHolderSearch }) {
                     className="dataItem"
                     to={"/user/" + userItem.username.toLowerCase()}
                   >
-                    <p>
-                      {userItem.username}{" "}
+                    <div className="searchData">
+                      <div className="foundUser" >
+                        <img
+                          style={{ width: "30px", height: "30px", borderRadius: "50%", marginRight: "10px" }}
+                          src={userItem.avatar}
+                          alt=""
+                        />
+                        <p style={{ color: "black" }}>{userItem.username}</p>{" "}
+                      </div>
                       {userItem.role.includes("photographer") && (
-                        <CameraEnhanceIcon />
+                        <CameraEnhanceIcon style={{ color: "black" }} />
                       )}
-                      {userItem.role.includes("model") && <DiamondIcon />}
+                      {userItem.role.includes("model") && <DiamondIcon style={{ color: "black" }} />}
                       {userItem.role.includes("makeup artist") && (
-                        <AutoFixHighIcon />
+                        <AutoFixHighIcon style={{ color: "black" }} />
                       )}
-                      {userItem.role.includes("hair designer") && (
-                        <ColorLensIcon />
-                      )}
-                      {userItem.role.includes("producer") && (
-                        <AttachMoneyIcon />
-                      )}
-                      {userItem.role.includes("props master") && <WorkIcon />}
-                    </p>
+                    </div>
                   </Link>
                 );
               })}

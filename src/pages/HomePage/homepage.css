@@ -1,0 +1,43 @@
+.feedPage {
+  min-height: 100vh;
+}
+
+.userDetails {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 350px;
+}
+
+.userDetailsCard {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  background-color: white;
+  padding: 10px 0px 30px 20px;
+  border-radius: 15px;
+}
+
+.userPhoto {
+  width: 50px;
+  border-radius: 50%;
+  margin: 10px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  text-align: start;
+}
+
+.centerElement {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.friendList {
+  width: 300px;
+}
