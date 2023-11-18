@@ -63,6 +63,7 @@ const EditProfile = () => {
             type="file"
             name="avatar"
             id="avatar"
+            style={{ display: "none" }} 
             onChange={(e) => setImage(e.target.files[0])}
           />
         </div>
