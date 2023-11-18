@@ -46,8 +46,8 @@ const EditProfile = () => {
         <div className="cover-photo-container">
           <input
             type="file"
-            name="image"
-            id="image"
+            name="cover"
+            id="cover"
             style={{ display: "none" }} // Hide the default input
             onChange={(e) => setCoverPhoto(e.target.files[0])}
           />
@@ -61,8 +61,8 @@ const EditProfile = () => {
         <div className="cover-photo-container">
           <input
             type="file"
-            name="image"
-            id="image"
+            name="avatar"
+            id="avatar"
             onChange={(e) => setImage(e.target.files[0])}
           />
         </div>
