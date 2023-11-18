@@ -51,7 +51,10 @@ export default function TaggedImages({username}) {
   return (
     <>
       <section className="usersPictures">
-        {images.map((picture, index) => (
+        { images.length === 0 ? 
+        <div>
+          <h4 style={{color: "gray", padding:"100px 0px 100px 0px"}} >No images</h4>
+        </div> : images.map((picture, index) => (
           <div className="photoContainer" key={picture.link}>
             <img
               src={picture.link}
@@ -60,10 +63,6 @@ export default function TaggedImages({username}) {
               on
               onClick={() => clickImage(picture, index)}
             />
-            {/* <DeleteImage
-              imageId={picture._id}
-              getLatestPictures={getLatestPictures}
-            /> */}
           </div>
         ))}
         {photoModal && (

@@ -53,7 +53,10 @@ const UserPictures = ({ id }) => {
   return (
     <>
       <section className="usersPictures">
-        {pictures.map((picture, index) => (
+        { pictures.length === 0 ? 
+        <div>
+          <h4 style={{color: "gray", padding:"100px 0px 100px 0px"}} >No images</h4>
+        </div> : pictures.map((picture, index) => (
           <div className="photoContainer" key={picture.link}>
             <img
               src={picture.link}
