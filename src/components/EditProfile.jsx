@@ -51,7 +51,7 @@ const EditProfile = () => {
             style={{ display: "none" }} // Hide the default input
             onChange={(e) => setCoverPhoto(e.target.files[0])}
           />
-          <label htmlFor="image" className="cover-label">
+          <label htmlFor="cover" className="cover-label">
             <span className="hover-text">Click to choose photo</span>
             <img src={user.cover} alt={user.username} />
           </label>
@@ -66,7 +66,7 @@ const EditProfile = () => {
             onChange={(e) => setImage(e.target.files[0])}
           />
         </div>
-          <label htmlFor="image" className="cover-label">
+          <label htmlFor="avatar" className="cover-label">
             <span className="hover-text-avatar">Click to choose photo</span>
             <img className="editAvatar" src={user.avatar} alt={user.username} />
           </label>
